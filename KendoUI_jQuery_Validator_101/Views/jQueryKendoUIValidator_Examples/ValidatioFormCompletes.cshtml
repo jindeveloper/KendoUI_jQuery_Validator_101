@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "ValidatioFormCompletes";
+    Layout = "~/Views/Shared/__Layout.cshtml";
+}
+
+@section styles{
+    <style>
+
+        form {
+            width: 500px;
+            margin: auto;
+        }
+
+            form div label {
+                width: 250px;
+                display: inline-block;
+                padding-bottom: 10px;
+                padding-top: 5px;
+            }
+
+            form div input {
+                width: 300px;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+        button {
+            width: 304px;
+        }
+
+        div#message {
+            text-align: left;
+            color: red;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .custom_validationSection {
+            border-color: #b07575;
+            background-color: #ff4100;
+            color: #1b1a1e;
+            font-size: smaller;
+            border-radius: 12px;
+        }
+    </style>
+}
+
+<form id="basicUsage">
+    <h3>ValidatioFormCompletes</h3>
+    <div>
+        <label>Firstname:</label>
+        <input type="text" name="firstname" id="firstname" placeholder="Put your firstname" required />
+    </div>
+    <div>
+        <label>Lastname:</label>
+        <input type="text" name="lastname" id="lastname" placeholder="Put your lastname" required />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="email" id="email" placeholder="Put your email" required />
+    </div>
+    <div id="message">
+
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+        <button type="reset" id="reset">Clear</button>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+
+        var form = $("#basicUsage"),
+            messageDiv = $("#message"),
+            clearBtn = $("#reset"),
+            validator = null,
+            myErrorTemplate = '<span class="k-widget k-tooltip k-tooltip-validation custom_validationSection">' +
+                                            '<span class="k-icon k-i-error"></span >Hello #=message#</span >';
+
+        $(function () {
+
+            if (form) {
+
+                validator = form.kendoValidator({
+                    validateOnBlur: true,
+                    errorTemplate: myErrorTemplate,
+                    validate: function (e) { //this is triggered when the validation is complete
+                        if (e.valid === true) {
+
+                            toggleControls();
+                            toggleErrorSummary();
+
+                            kendo.ui.progress(form, true);
+
+                            setTimeout(function () {
+                                kendo.ui.progress(form, false);
+                                toggleControls();
+                                kendo.alert("Your registration was succesful!");
+                                $(clearBtn).trigger("click");
+                            }, 500);
+
+                        }
+                        else {
+                            toggleErrorSummary(true);
+                        }
+
+                        return false;
+                    }
+                }).data("kendoValidator");
+            }
+        });
+
+        $(clearBtn).click(hideFormErrorMessages);
+
+        $(form).submit(function () {
+            return false;
+        });
+
+        function hideFormErrorMessages() {
+
+            if (validator) {
+                toggleErrorSummary();
+                validator.hideMessages();
+            }
+        }
+
+        function toggleErrorSummary(show) {
+
+            if (show === true) {
+                messageDiv.html("Please fill up the fields properly");
+
+            } else {
+                messageDiv.html("");
+            }
+        }
+
+        function toggleControls() {
+
+            if (form.find("input, button").attr("disabled")) {
+                form.find("input, button").attr("disabled", false);
+            } else {
+                form.find("input, button").attr("disabled", true);
+            }
+        }
+
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <!-- add the at least required css-->
+    <!-- start of Kendo UI jQuery related CSS-->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.219/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.219/styles/kendo.rtl.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.219/styles/kendo.default.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.219/styles/kendo.mobile.all.min.css">
+    <!-- end of Kendo UI Jquery related CSS-->
+    @RenderSection("styles", required: false)
+    <!-- add the kendo ui library-->
+    <!-- start of Kendo UI jQuery Scripts-->
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.219/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.219/js/kendo.all.min.js"></script>
+    <!-- end of Kendo UI jQuery Scripts-->
+</head>
+<body>
+    @RenderBody()
+</body>
+@RenderSection("scripts", required: false)
+</html>

@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewBag.Title = "CustomRulesWithCustomMessageUsingValidationAttribute";
+    Layout = "~/Views/Shared/__Layout.cshtml";
+}
+
+
+
+@section styles{
+    <style>
+
+        form {
+            width: 500px;
+            margin: auto;
+        }
+
+        form div label {
+            width: 250px;
+            display: inline-block;
+            padding-bottom: 10px;
+            padding-top: 5px;
+        }
+
+        form div input {
+            width: 300px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 304px;
+        }
+
+        div#message {
+            text-align: left;
+            color: red;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+}
+
+<form id="basicUsage" method="post">
+   
+    <h3>CustomRulesWithCustomMessageUsingValidationAttribute</h3>
+    <div>
+        <label>Username:</label>
+        <input type="text" name="username" id="username" placeholder="Put your firstname" 
+                            data-message="Username is undoubtedly required!"
+                            data-messageUsername="Username already exists"/>
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="myEmail" id="myEmail" placeholder="Put your email" 
+               data-message="Email is undoubtedly required!" />
+    </div>
+    <div>
+        <label>Country Code:</label>
+        <input type="text" name="countryCode" id="countryCode" placeholder="Your country code"
+               data-message="Country-code is undoubtedly required!"
+               />
+    </div>
+    <div id="message">
+
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+
+        var form = $("#basicUsage"),
+            messageDiv = $("#message"),
+            validator = null;
+
+        $(function () {
+
+            if (form) {
+                validator = form.kendoValidator({
+                    rules: {
+                        customRequired: function (input) {
+                            return ($.trim(input.val()) !== "");
+                        },
+                        customEmail: function (input) {
+
+                            var emailFormat = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+                            if ($.trim(input.val()) !== "" & input.is("[name='myEmail']")) {
+                                return input.val().match(emailFormat);
+                            }
+
+                            return true;
+                        },
+                        usernameExists: function (input) {
+                            if (input.is("[name='username']")) {
+                                var result = true;
+                                $.ajax({
+                                    url: `CheckUserName?username=${input.val()}`,
+                                    async: false,
+                                    success: function (response) {
+
+                                        result = response;
+                                    }
+                                });
+
+                                return result;
+                            }
+
+                            return true;
+                        }
+                    },
+                    messages: {
+                        customRequired: function (input) {
+
+                            return input.data("message");
+                        },
+                        usernameExists: function (input) {
+                            console.log("usernameExists");
+                            if (input.is("[name='username']")) {
+                                return input.attr("data-messageUsername");
+                            }
+                        },
+                        customEmail: "Invalid email!" // an example of validation messages defined as custom messages
+                    }
+                }).data("kendoValidator");
+            }
+        });
+
+        $(form).submit(validateMyForm);
+
+        function validateMyForm(e) {
+
+            e.preventDefault();
+
+            if (validator) {
+
+                var resultofvalidation = validator.validate();
+
+                if (!resultofvalidation) {
+                    messageDiv.html("please fill up the fields properly");
+                } else {
+                    messageDiv.html("");
+                }
+            }
+        }
+
+    </script>
+}

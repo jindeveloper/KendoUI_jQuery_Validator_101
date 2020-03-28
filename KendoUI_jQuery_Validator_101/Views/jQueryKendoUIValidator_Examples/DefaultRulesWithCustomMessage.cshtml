@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "DefaultRulesWithCustomMessage";
+    Layout = "~/Views/Shared/__Layout.cshtml";
+}
+
+@section styles{
+    <style>
+
+        form {
+            width: 500px;
+            margin: auto;
+        }
+
+        form div label {
+            width: 250px;
+            display: inline-block;
+            padding-bottom: 10px;
+            padding-top: 5px;
+        }
+
+        form div input {
+            width: 300px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 304px;
+        }
+
+        div#message {
+            text-align: left;
+            color: red;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+}
+
+<form id="basicUsage" method="post">
+    <h3>DefaultRulesWithCustomMessage</h3>
+    <div>
+        <label>Firstname:</label>
+        <input type="text" name="firstname" id="firstname" placeholder="Put your firstname" required 
+               data-required-msg="Your firstname is required! :-)" />
+    </div>
+    <div>
+        <label>Lastname:</label>
+        <input type="text" name="lastname" id="lastname" placeholder="Put your lastname" required 
+               data-required-msg="Your lastname is required! :-)"/>
+    </div>
+    <div>
+        <label>BirthDate:</label>
+        <input type="date" name="birthdate" id="birthdate" placeholder="Your birthdate" required 
+               data-date-msg="Your birthdate is not recognized! :-)"/>
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="email" id="email" placeholder="Put your email" required 
+               data-required-msg="Your email is required! :-)" 
+               data-email-msg="Your email is not recognized!"/>
+    </div>
+    <div>
+        <label>Country Code:</label>
+        <input type="text" name="countryCode" id="countryCode" placeholder="Your country code" pattern="[A-Za-z]{3}"
+               required
+               data-required-msg="Country code is required! :-)"
+               data-pattern-msg="Unable to recognize your country code!"/>
+    </div>
+    <div>
+        <label>Number of Mobile Phones to donate:</label>
+        <input type="number" id="mobilephonetodonate" name="mobilephonetodonate" step="2" min="2" max="10 required"
+               data-step-msg="Steps should be divisble by 2"
+               data-min-msg="Minimum of 2 should be donated"
+               data-max-msg="Maximum of 10 only"/>
+    </div>
+    <div>
+        <label>Your favorite search engine?</label>
+        <input type="url" name="url" id="url" placeholder="Your favorite search engine" required
+               data-required-msg="Search engine is required!"
+               data-url-msg="Unable to recognize the URL you have given!"/>
+    </div>
+    <div id="message">
+
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+
+        var form = $("#basicUsage"),
+            messageDiv = $("#message"),
+            validator = null;
+
+        $(function () {
+
+            if (form) {
+
+                            // attach a validator to the container and get a reference
+                validator = form.kendoValidator().data("kendoValidator");
+                console.log(validator);
+            }
+        });
+
+        $(form).submit(validateMyForm);
+
+        function validateMyForm(e) {
+
+            e.preventDefault();
+
+            if (validator) {
+
+                var resultOfValidation = validator.validate();
+
+                if (!resultOfValidation) {
+                    messageDiv.html("Please fill up the fields properly");
+                } else {
+                    messageDiv.html("");
+                }
+            }
+        }
+
+    </script>
+}

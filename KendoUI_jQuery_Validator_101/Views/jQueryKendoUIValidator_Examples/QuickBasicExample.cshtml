@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "QuickBasicExample";
+    Layout = "~/Views/Shared/__Layout.cshtml";
+}
+
+@section styles{
+    <style>
+
+        form {
+            width: 500px;
+            margin: auto;
+        }
+
+            form div label {
+                width: 250px;
+                display: inline-block;
+                padding-bottom: 10px;
+                padding-top: 5px;
+            }
+
+            form div input {
+                width: 300px;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+        button {
+            width: 304px;
+        }
+
+        div#message {
+            text-align: left;
+            color: red;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+}
+
+
+
+
+<form id="basicUsage" method="post">
+    <h3>Quick basic example using default rules</h3>
+    <div>
+        <label>Firstname:</label>
+        <input type="text" name="firstname" id="firstname" placeholder="Put your firstname" required />
+    </div>
+    <div>
+        <label>Lastname:</label>
+        <input type="text" name="lastname" id="lastname" placeholder="Put your lastname" required />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="email" id="email" placeholder="Put your email" required />
+    </div>
+    <div id="message">
+
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+        var form = $("#basicUsage"),
+            messageDiv = $("#message"),
+            validator = null;
+
+        $(function () {
+
+            if (form) {
+
+               //need to attach the form to kendo validator and get reference
+                validator = form.kendoValidator().data("kendoValidator"); 
+            }
+        });
+
+        $(form).submit(validateMyForm);
+
+        function validateMyForm(e) {
+
+            e.preventDefault();
+
+            if (validator) {
+
+                var resultOfValidation = validator.validate();
+
+                if (!resultOfValidation) {
+                    messageDiv.html("Please fill up the fields properly");
+                } else {
+                    messageDiv.html("");
+                }
+            }
+        }
+    </script>
+}

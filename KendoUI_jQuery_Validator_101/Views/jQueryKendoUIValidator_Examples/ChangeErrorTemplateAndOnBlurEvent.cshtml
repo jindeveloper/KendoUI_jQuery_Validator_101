@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "ChangeErrorTemplateAndOnBlurEvent";
+    Layout = "~/Views/Shared/__Layout.cshtml";
+}
+
+
+@section styles{
+    <style>
+
+        form {
+            width: 500px;
+            margin: auto;
+        }
+
+        form div label {
+            width: 250px;
+            display: inline-block;
+            padding-bottom: 10px;
+            padding-top: 5px;
+        }
+
+        form div input {
+            width: 300px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 304px;
+        }
+
+        div#message {
+            text-align: left;
+            color: red;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .custom_validationSection {
+            border-color: #b07575;
+            background-color: #ff4100;
+            color: #1b1a1e;
+            font-size: smaller;
+            border-radius: 12px;    
+        }
+    </style>
+}
+
+<form id="basicUsage" method="post">
+    <h3>Set a new  error template And configure on-blur event</h3>
+    <div>
+        <label>Firstname:</label>
+        <input type="text" name="firstname" id="firstname" placeholder="Put your firstname" required />
+    </div>
+    <div>
+        <label>Lastname:</label>
+        <input type="text" name="lastname" id="lastname" placeholder="Put your lastname" required />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="email" id="email" placeholder="Put your email" required />
+    </div>
+    <div id="message">
+
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+        <button type="reset" id="reset">Clear</button>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+
+        var form = $("#basicUsage"),
+            messageDiv = $("#message"),
+            clearBtn = $("#reset"),
+            validator = null,
+            //Setup my the look and feel for the errors on the page.
+            myErrorTemplate
+                = '<span class="k-widget k-tooltip k-tooltip-validation custom_validationSection">' +
+                                '<span class="k-icon k-i-error"></span > Hello #=message#</span > ';
+
+        $(function () {
+
+            if (form) {
+                //configure the kendoValidator
+                validator =form.kendoValidator({
+                    validateOnBlur: true, //validate on blur event
+                    errorTemplate: myErrorTemplate //set the new error template
+                }).data("kendoValidator");
+            }
+                   
+        });
+
+        $(form).submit(validateMyForm);
+
+        $(clearBtn).click(hideFormErrorMessages);
+
+        function validateMyForm(e) {
+
+            e.preventDefault();
+
+            if (validator) {
+
+                var resultOfValidation = validator.validate();
+
+                if (!resultOfValidation) {
+                    messageDiv.html("Please fill up the fields properly");
+                } else {
+                    messageDiv.html("");
+                }
+            }
+        }
+
+        function hideFormErrorMessages() {
+
+            if (validator) {
+    
+                validator.hideMessages(); //gives the user the capability to clear error messages!
+                 messageDiv.html("");
+            }
+        }
+
+    </script>
+}
